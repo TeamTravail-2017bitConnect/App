@@ -1,0 +1,11 @@
+<md-list ng-controller="ListCtrl" ng-cloak>
+
+
+  <md-subheader class="md-no-sticky">Secondary Menus</md-subheader>
+
+  <md-list-item ng-repeat="sd in sds"  ng-click="chooseSd(sd)">
+    <p>{{sd.name}}</p>
+    <p>Progress [{{sd.progress}}%]</p>
+  </md-list-item>
+
+</md-list>

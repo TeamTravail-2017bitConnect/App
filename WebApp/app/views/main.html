@@ -1,0 +1,31 @@
+<div class="boxContainer">
+  <div style="left: 0px; right: 0px; top: 55px; bottom: 0px; position:absolute; z-index: 1;">
+    <ng-include src="'views/map.html'"></ng-include>
+  </div>
+
+  <div style="right: 10px; width: 500px; height: 90%; top: 60px; position:absolute; z-index: 2;">
+    <!-- ([Reference]https://material.angularjs.org/latest/demo/tabs) -->
+    <md-content class="md-padding" style="width: 100%; height: 100%; padding: 0px">
+      <md-tabs class="md-accent" md-selected="dataForSlideNavbar.selectedIndex" 
+        md-align-tabs="{{data.bottom ? 'bottom' : 'top'}}" 
+        style="height: 100%; width: 100%; ">
+        <md-tab id="tab1">
+          <md-tab-label>Item One</md-tab-label>
+          <md-tab-body>
+            <ng-include src="'views/tab1.html'"></ng-include>
+          </md-tab-body>
+        </md-tab>
+        <md-tab id="tab3">
+          <md-tab-label>Item Three</md-tab-label>
+          <md-tab-body>
+            View for Item #3 <br/>
+            data.selectedIndex = 2;
+          </md-tab-body>
+        </md-tab>
+      </md-tabs>
+    </md-content>
+
+
+  </div>
+
+</div>
