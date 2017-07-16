@@ -1,25 +1,26 @@
 md-content md-tabs {
+  height: 800px;
   border: 1px solid #e1e1e1; }
   md-content md-tabs md-tab-content {
     padding: 15px; }
     md-content md-tabs md-tabs-canvas {
       /*bottom: 0px;*/
-      height: 650px;
+      height: 800px;
       background-color: #cfd8dc; }
     md-content md-tabs md-tab-content:nth-child(1) {
-      height: 570px;
+      height: 100%;
       background-color: #ffffff; }
     md-content md-tabs md-tab-content:nth-child(2) {
-      height: 570px;
+      height: 100%;
       background-color: #ffffff; }
     md-content md-tabs md-tab-content:nth-child(3) {
-      height: 570px;
+      height: 100%;
       background-color: #ffffff; }
     md-content md-tabs md-tab-content:nth-child(4) {
-      height: 570px;
+      height: 100%;
       background-color: #aed581; }
     md-content md-tabs md-tab-content:nth-child(5) {
-      height: 570px;
+      height: 100%;
       background-color: #00897b; }
 
 .after-tabs-area > span {

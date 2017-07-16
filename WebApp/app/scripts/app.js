@@ -16,7 +16,8 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngMaterial',
-    'ngMap'
+    'ngMap',
+    'chart.js'
   ])
   .config(function ($routeProvider, $locationProvider, $mdIconProvider) {
     $mdIconProvider

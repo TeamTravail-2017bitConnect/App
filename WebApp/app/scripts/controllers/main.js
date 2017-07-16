@@ -16,13 +16,13 @@ angular.module('webAppApp')
     alert('Clicked a link inside infoWindow');
   };
 
-  $rootScope.destinations = [
-    {id:'foo', name: 'FOO destination', position:[35.620515, 139.646976]},
-    {id:'bar', name: 'BAR destination', position:[35.619416, 139.642845]}
-  ];
+  $rootScope.destinations = [];
   $rootScope.destination = $rootScope.destinations[0];
+  $rootScope.defaultZoom = 15;
+  $rootScope.centerAxis = {"x": 35.620515, "y": 139.646976};
 
   $rootScope.showDetail = function(e, destination) {
+    $rootScope.map.hideInfoWindow('foo-iw');
     $rootScope.destination = destination;
     $rootScope.map.showInfoWindow('foo-iw', destination.id);
   };

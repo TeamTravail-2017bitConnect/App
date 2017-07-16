@@ -1,0 +1,15 @@
+<md-list ng-controller="ListCtrl" ng-cloak>
+
+
+	<md-subheader class="md-no-sticky">
+		<p>{{sd.name}}</p>
+		<p>Progress [{{sd.progress}}%]</p>
+	</md-subheader>
+	
+	<div>
+		<canvas id="doughnut" class="chart chart-doughnut"
+		  chart-data="data" chart-labels="labels">
+		</canvas> 
+	</div>
+
+</md-list>

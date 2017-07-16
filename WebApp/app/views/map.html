@@ -1,15 +1,8 @@
-  <ng-map zoom="15" center="35.620515, 139.646976" map-type-id="TERRAIN" style="width: 100%; height: 100%;">
-  <!--     <shape name="polyline" 
-        path="[
-          [35.620515, 139.646976],
-          [35.619416, 139.642845],
-          [35.620205, 139.641440]
-        ]"
-        geodesic="true"
-        stroke-color="#FF0000"
-        stroke-opacity="1.0"
-        stroke-weight="2">
-      </shape> -->
+  <ng-map 
+    zoom={{defaultZoom}} 
+    center="{{centerAxis.x}}, {{centerAxis.y}}" 
+    map-type-id="TERRAIN" 
+    style="width: 100%; height: 100%;">
 
         <marker id='{{d.id}}' position="{{d.position}}"
           ng-repeat="d in destinations"
