@@ -28,16 +28,16 @@ angular.module('webAppApp')
           "centerAxis": {"x": 35.620515, "y": 139.646976},
           "defaultZoom": 18,
           "finished": [
-            {"x": 35.620515, "y": 139.646976},
-            {"x": 35.621515, "y": 139.648976},
-            {"x": 35.620115, "y": 139.646176},
-            {"x": 35.620215, "y": 139.646876}
+            {"id": 1, "name":"Ken1", "x": 35.620515, "y": 139.646976},
+            {"id": 2, "name":"Ken2", "x": 35.621515, "y": 139.648976},
+            {"id": 3, "name":"Ken3", "x": 35.620115, "y": 139.646176},
+            {"id": 4, "name":"Ken4", "x": 35.620215, "y": 139.646876}
           ],
           "remaining": [
-            {"x": 34.620515, "y": 139.646976},
-            {"x": 34.820515, "y": 138.646976},
-            {"x": 34.020515, "y": 139.146976},
-            {"x": 34.120515, "y": 138.146976}
+            {"id": 5, "name":"Ken5", "x": 34.620551, "y": 139.646976},
+            {"id": 6, "name":"Ken6", "x": 34.620005, "y": 138.646976},
+            {"id": 7, "name":"Ken7", "x": 34.620205, "y": 139.646976},
+            {"id": 8, "name":"Ken8", "x": 34.620555, "y": 138.646976}
           ]},
         {"name": "Tanaka",
           "pic": imagePath,  
@@ -46,16 +46,16 @@ angular.module('webAppApp')
           "centerAxis": {"x": 36.020515, "y": 138.946976},
           "defaultZoom": 7,
           "finished": [
-            {"x": 36.020515, "y": 138.946976},
-            {"x": 35.921515, "y": 139.948976}
+            {"id": 1, "name":"Taka1", "x": 36.020515, "y": 138.946976},
+            {"id": 2, "name":"Taka2", "x": 35.921515, "y": 139.948976}
           ],
           "remaining": [
-            {"x": 34.020515, "y": 139.146976},
-            {"x": 34.120515, "y": 138.146976},
-            {"x": 34.620515, "y": 139.646976},
-            {"x": 34.820515, "y": 138.646976},
-            {"x": 34.020515, "y": 139.146976},
-            {"x": 34.120515, "y": 138.146976}
+            {"id": 3, "name":"Taka3", "x": 34.020515, "y": 139.146976},
+            {"id": 4, "name":"Taka4", "x": 34.120515, "y": 138.146976},
+            {"id": 5, "name":"Taka5", "x": 34.620515, "y": 139.646976},
+            {"id": 6, "name":"Taka6", "x": 34.820515, "y": 138.646976},
+            {"id": 7, "name":"Taka7", "x": 34.020515, "y": 139.146976},
+            {"id": 8, "name":"Taka8", "x": 34.120515, "y": 138.146976}
           ]}
     ];
 
@@ -74,18 +74,34 @@ angular.module('webAppApp')
     );
   };
 
+
+// Funcs when user chooses SD from a list.
   $scope.chooseSd = function(sd){
-    $rootScope.destinations = [];
+    $rootScope.finishedDstinations = [];
+    $rootScope.remainingDstinations = [];
     sd.finished.forEach(function(axis){
       var item = {
-            id:'foo', 
-            name: 'FOO destination', 
+            id: axis.id, 
+            name: axis.name, 
             position:[axis.x, axis.y]
           };
-      $rootScope.destinations.push(item);
+      $rootScope.finishedDstinations.push(item);
+    });
+    sd.remaining.forEach(function(axis){
+      var item = {
+            id: axis.id, 
+            name: axis.name, 
+            position:[axis.x, axis.y]
+          };
+      $rootScope.remainingDstinations.push(item);
     });
     $rootScope.defaultZoom = sd.defaultZoom;
     $rootScope.centerAxis = sd.centerAxis;
+
+    console.log("remaining");
+    console.log($rootScope.finishedDstinations);
+    console.log("finished");
+    console.log($rootScope.remainingDstinations);
 
     $rootScope.sd = sd;
     $rootScope.firstToSecond();
@@ -93,12 +109,15 @@ angular.module('webAppApp')
 
   $rootScope.showFinished = function(val){
     if(val){
-      console.log($rootScope.sd);
       var finishedList = $rootScope.sd.finished.slice();
+      console.log("list********:");
+      console.log(finishedList);
       $rootScope.origin = finishedList[0];
       $rootScope.destination = finishedList[finishedList.length-1];
       finishedList.pop();
       finishedList.shift();
+      console.log("list********:");
+      console.log(finishedList);
 
       $rootScope.wayPoints = [];
       finishedList.forEach(function(axis){

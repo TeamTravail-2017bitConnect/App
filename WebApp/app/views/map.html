@@ -7,9 +7,15 @@
     style="width: 100%; height: 100%;">
 
         <marker id='{{d.id}}' position="{{d.position}}"
-          ng-repeat="d in destinations"
+          ng-repeat="d in finishedDestinations"
           on-click="showDetail(d)">
         </marker>
+
+        <marker id='{{d.id}}' position="{{d.position}}"
+          ng-repeat="d in remainingDestinations"
+          on-click="showDetail(d)">
+        </marker>
+
   <!--       <marker id='aa' position="[35.620515, 139.646976]"
             on-click="showDetail(destination)">
         </marker> -->
