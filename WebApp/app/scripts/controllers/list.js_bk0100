@@ -5,12 +5,6 @@ angular.module('webAppApp')
   .controller('ListCtrl', function($rootScope, $scope, $http, $mdDialog) {
 
     var imagePath = 'images/yeoman.png';
-    $rootScope.center = {
-      "name": "東京メインセンター１",
-      "x": "35.615514",
-      "y": "139.632126 "
-    };
-
     $scope.sds = [
         {
           "name": "Yamada", 
@@ -30,7 +24,7 @@ angular.module('webAppApp')
     var index = points[0]._index;
     if(index == 0){
       console.log("Show Remainig");
-      $rootScope.remainingClicked(false);
+      $rootScope.remainingClicked(true);
       console.log($rootScope.remainingDestinations);
     };
   };
@@ -71,9 +65,8 @@ angular.module('webAppApp')
       var destinationList_wk = destinationList.slice();
       var originDirection = $rootScope.truckPos[0]
       $rootScope.origin = originDirection.position;
-      // var finalDestDirection = destinationList_wk.pop();
-      // var finalDestDirection = destinationList_wk.pop();
-      $rootScope.destination = $rootScope.center.x + "," + $rootScope.center.y;
+      var finalDestDirection = destinationList_wk.pop();
+      $rootScope.destination = finalDestDirection.x + "," + finalDestDirection.y;
 
       console.log($rootScope.origin);
       console.log($rootScope.destination);
@@ -84,7 +77,6 @@ angular.module('webAppApp')
         var tmp = {location: point.x + "," + point.y, stopover: true};
         $rootScope.wayPoints.push(tmp);
       });
-      console.log($rootScope.wayPoints);
   };
   $rootScope.hideRoute = function(){
     $rootScope.origin = undefined;
@@ -98,17 +90,8 @@ $rootScope.updateTruckPos = function(sd, callback){
   // setTimeout(function(){
     $http({
       method: 'GET',
-      url: "http://52.192.108.213/trucks/" + sd.id,
-      header: {
-        'Access-Control-Allow-Origin':'*',
-        'Access-Control-Allow-Methods':'POST, GET, OPTIONS',
-        'Access-Control-Allow-Headers':'*'
-      }
+      url: "http://private-8acc8-delivery26.apiary-mock.com/trucks/" + sd.id
     }).then(function successCallback(response) {
-
-      console.log("response:");
-      console.log(response);
-
       var locationList = response.data.locationHistory;
       $rootScope.truckPos = [{
           "id": locationList[0].update_at,
@@ -121,12 +104,12 @@ $rootScope.updateTruckPos = function(sd, callback){
       $rootScope.name = response.data.name;
       $rootScope.progressRate = response.data.progressRate *100;
 
-      callback();
+      console.log($rootScope.rawRemainingDestinations);
 
     }, function errorCallback(response) {
       console.log(response);
-      callback();
     });
+    callback();
   // }, 1000);
 };
 
@@ -142,8 +125,6 @@ $rootScope.updateTruckPos = function(sd, callback){
       var remainingSize = $rootScope.rawRemainingDestinations.length;
       var finishedSize = $rootScope.rawFinishedDestinations.length;
       var redeliveringSize = 5;
-      $rootScope.doneRate = (finishedSize / (finishedSize + remainingSize)) * 100;
-
 
       $rootScope.labels = ["配達済み", "未配達", "再配達"];
       $rootScope.data = [remainingSize, finishedSize, redeliveringSize];
@@ -152,9 +133,6 @@ $rootScope.updateTruckPos = function(sd, callback){
       // SInitialize the page.
       $rootScope.sd = sd;
       $rootScope.firstToSecond(); 
-
-      $rootScope.remainingClicked(true);
-      $rootScope.finishedClicked(true);
 
     });
   };
@@ -170,7 +148,7 @@ $rootScope.updateTruckPos = function(sd, callback){
     $rootScope.setRemainingDestinations($rootScope.rawRemainingDestinations);
   };
   $rootScope.hideRemaining = function(){
-      $scope.resetRemainingDestinations();
+      $rootScope.resetRemainingDestinations();
   };
 
 

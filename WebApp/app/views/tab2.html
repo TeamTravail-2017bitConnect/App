@@ -2,25 +2,74 @@
 
 
 	<md-subheader class="md-no-sticky">
-		<p>{{sd.name}}</p>
-		<p>Progress [{{sd.progress}}%]</p>
+
+
+      <div class="row">
+        <div class="col-sm-3">
+           <img src="images/yeoman.png" class="img-circle" height="55" width="55" alt="I'm Yeoman">
+          </div>
+        <div class="col-sm-9 text-center">
+           <p style="margin-bottom:0px;">{{name}}</p>
+          </div>
+      </div>
+
 	</md-subheader>
+
+		<p>ルートの消化率</p>
+		<div class="progress">
+		  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50"
+		  aria-valuemin="0" aria-valuemax="100" style="width:{{progressRate}}%">
+		    {{progressRate}}% Complete (info)
+		  </div>
+		</div>
+
+		<p>荷物の配達完了率</p>
+		<div class="progress">
+		  <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="50"
+		  aria-valuemin="0" aria-valuemax="100" style="width:{{doneRate}}%">
+		    {{doneRate}}% Complete (info)
+		  </div>
+		</div>
+
 
 	<div>
 		<canvas id="doughnut" class="chart chart-doughnut"
-		  chart-data="data" chart-labels="labels">
+		  chart-data="data" chart-labels="labels" chart-options="options" chart-click="onClick">
 		</canvas> 
 	</div>
 
-	<div>
+
+   	<div class="col-sm-5 sidenav">
+
+  <div class="funkyradio">
+  	<div class="funkyradio-default">
+<!-- 	    <label class="checkbox">
+    	<input type="checkbox" data-toggle="checkbox" value="">配達済み</label>
+    </div>
+    <label class="checkbox">
+      <input type="checkbox" data-toggle="checkbox" value="">
+      未配達
+    </label> -->
+    <label class="checkbox">
+      <input type="checkbox" data-toggle="checkbox" value="" ng-model="checkboxModel.route" ng-click="routeClicked(checkboxModel.route)">
+      想定ルート
+    </label>
+  </div>
+
+
+
+<!--    	<div class="col-sm-5 sidenav">
 		<form name="myForm">
-		  <label>配達済み:
+		  <label>配達済み:</label>
 		    <input type="checkbox" ng-model="checkboxModel.finished" ng-click="finishedClicked(checkboxModel.finished)">
-		  </label><br/>
-		  <label>未配達:
+		  <br/>
+		  <label>未配達:</label>
 		    <input type="checkbox" ng-model="checkboxModel.remaining" ng-click="remainingClicked(checkboxModel.remaining)">
-		   </label><br/>
-		</form>
+		  <br/>
+		  <label>想定ルート:</label>
+		    <input type="checkbox" ng-model="checkboxModel.route" ng-click="routeClicked(checkboxModel.route)">
+		   <br/>
+		</form> -->
 	</div>
 
 </md-list>

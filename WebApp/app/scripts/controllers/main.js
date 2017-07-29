@@ -2,9 +2,20 @@
 
 
 angular.module('webAppApp')
-	.controller('MainCtrl', function($rootScope, $scope, NgMap) {
+	.controller('MainCtrl', function($rootScope, $scope, NgMap, $route) {
 
 
+
+  $rootScope.resetMarkers = function(){
+    $rootScope.finishedDestinations = [];
+    $rootScope.remainingDestinations = [];
+    $rootScope.truckPos = [];
+
+    $rootScope.origin = undefined;
+    $rootScope.destination = undefined;
+    $rootScope.wayPoints = [];
+    $route.reload();
+  };
 
   // -- Funcs for GoogleMap
   NgMap.getMap().then(function(map) {

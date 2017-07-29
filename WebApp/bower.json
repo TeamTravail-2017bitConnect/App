@@ -11,7 +11,8 @@
     "angular-sanitize": "^1.4.0",
     "angular-touch": "^1.4.0",
     "angular-material": "^1.1.4",
-    "ngmap": "^1.18.1"
+    "ngmap": "^1.18.1",
+    "flat-ui": "^2.3.0"
   },
   "devDependencies": {
     "angular-mocks": "^1.4.0"

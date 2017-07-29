@@ -21,7 +21,7 @@
           on-click="showDetail(d)"
           icon="{
             url:'images/finishedMarker.gif',
-            scaledSize:[50,50],
+            scaledSize:[30,30],
             origin: [0,0],
             anchor: [0,0]
           }"></marker>
@@ -31,9 +31,18 @@
           on-click="showDetail(d)"
           icon="{
             url:'images/remainingMarker.gif',
+            scaledSize:[30,30],
+            origin: [0,0],
+            anchor: [0,0] 
+          }"></marker>
+
+        <marker id='{{d.id}}' position="{{d.position}}"
+          ng-repeat="d in truckPos"
+          icon="{
+            url:'images/truck_pin.png',
             scaledSize:[50,50],
             origin: [0,0],
-            anchor: [10,10] 
+            anchor: [0,0] 
           }"></marker>
 
   <!--       <marker id='aa' position="[35.620515, 139.646976]"
@@ -50,22 +59,13 @@
 
         <!-- Ref: https://ngmap.github.io/#/!directions.html -->
         <directions 
-          draggable="true"
-          panel="directions-panel"
           travel-mode="DRIVING" 
           waypoints="{{wayPoints}}"
           origin="{{origin}}"
           destination="{{destination}}"
           optimizeWaypoints="true">
         </directions>
-<!--         <custom-marker id="start"
-          position="{{origin}}">
-          <div> Start point </div>
-        </custom-marker>
-        <custom-marker id="end"
-          position="{{destination}}">
-          <div> Ends point </div>
-        </custom-marker> -->
+
 
 
 
