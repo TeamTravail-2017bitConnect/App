@@ -89,6 +89,34 @@ angular.module('webAppApp')
 
     $rootScope.sd = sd;
     $rootScope.firstToSecond();
-  }
+  };
+
+  $rootScope.showFinished = function(val){
+    if(val){
+      console.log($rootScope.sd);
+      var finishedList = $rootScope.sd.finished.slice();
+      $rootScope.origin = finishedList[0];
+      $rootScope.destination = finishedList[finishedList.length-1];
+      finishedList.pop();
+      finishedList.shift();
+
+      $rootScope.wayPoints = [];
+      finishedList.forEach(function(axis){
+        console.log(axis.x + " " + axis.x + " (types: " + (typeof axis.x) + ", " + (typeof axis.x) + ")");
+        var myLatlng = new google.maps.LatLng(axis.x,axis.y);
+        var tmp = {location: myLatlng, stopover: true};
+        $rootScope.wayPoints.push(tmp);
+      });
+      
+    }else{
+      $rootScope.origin = null;
+      $rootScope.destination = null;
+      $rootScope.wayPoints = null;
+    }
+  };
+
+  $rootScope.showRemaining = function(val){
+    console.log(val);
+  };
 
 });

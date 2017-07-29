@@ -5,11 +5,22 @@
 		<p>{{sd.name}}</p>
 		<p>Progress [{{sd.progress}}%]</p>
 	</md-subheader>
-	
+
 	<div>
 		<canvas id="doughnut" class="chart chart-doughnut"
 		  chart-data="data" chart-labels="labels">
 		</canvas> 
+	</div>
+
+	<div>
+		<form name="myForm">
+		  <label>配達済み:
+		    <input type="checkbox" ng-model="checkboxModel.finished" ng-click="showFinished(checkboxModel.finished)">
+		  </label><br/>
+		  <label>未配達:
+		    <input type="checkbox" ng-model="checkboxModel.remaining" ng-click="showRemaining(checkboxModel.remaining)">
+		   </label><br/>
+		</form>
 	</div>
 
 </md-list>

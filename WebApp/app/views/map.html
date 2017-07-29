@@ -1,3 +1,5 @@
+
+
   <ng-map 
     zoom={{defaultZoom}} 
     center="{{centerAxis.x}}, {{centerAxis.y}}" 
@@ -11,6 +13,28 @@
   <!--       <marker id='aa' position="[35.620515, 139.646976]"
             on-click="showDetail(destination)">
         </marker> -->
+
+<!--         <directions
+          draggable="true"
+          panel="directions-panel"
+          travel-mode="DRIVING"
+          origin="1135 Karamea-Kohaihai Rd, Kahurangi National Park, Tasman"
+          destination="Pier St, Jackson Bay, West Coast, New Zeland">
+        </directions> -->
+
+        <!-- Ref: https://ngmap.github.io/#/!directions.html -->
+        <directions 
+          draggable="true"
+          panel="directions-panel"
+          travel-mode="DRIVING" 
+          waypoints="{{wayPoints}}"
+          origin="{{origin}}"
+          destination="{{destination}}"
+          optimizeWaypoints="true">
+        </directions>
+
+
+
 
         <info-window id="foo-iw">
           <div ng-non-bindable="">
