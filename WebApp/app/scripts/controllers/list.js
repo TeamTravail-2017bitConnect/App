@@ -34,10 +34,10 @@ angular.module('webAppApp')
             {"id": 4, "name":"Ken4", "x": 35.620215, "y": 139.646876}
           ],
           "remaining": [
-            {"id": 5, "name":"Ken5", "x": 34.620551, "y": 139.646976},
-            {"id": 6, "name":"Ken6", "x": 34.620005, "y": 138.646976},
-            {"id": 7, "name":"Ken7", "x": 34.620205, "y": 139.646976},
-            {"id": 8, "name":"Ken8", "x": 34.620555, "y": 138.646976}
+            {"id": 5, "name":"Ken5", "x": 35.620505, "y": 139.647666},
+            {"id": 6, "name":"Ken6", "x": 35.621505, "y": 139.648576},
+            {"id": 7, "name":"Ken7", "x": 35.620105, "y": 139.646576},
+            {"id": 8, "name":"Ken8", "x": 35.620205, "y": 139.646576}
           ]},
         {"name": "Tanaka",
           "pic": imagePath,  
@@ -63,79 +63,117 @@ angular.module('webAppApp')
   $scope.data = [300, 500, 100];
 
 
-  $scope.doSecondaryAction = function(event) {
-    $mdDialog.show(
-      $mdDialog.alert()
-        .title('Secondary Action')
-        .textContent('Secondary actions can be used for one click actions')
-        .ariaLabel('Secondary click demo')
-        .ok('Neat!')
-        .targetEvent(event)
-    );
+  // $scope.doSecondaryAction = function(event) {
+  //   $mdDialog.show(
+  //     $mdDialog.alert()
+  //       .title('Secondary Action')
+  //       .textContent('Secondary actions can be used for one click actions')
+  //       .ariaLabel('Secondary click demo')
+  //       .ok('Neat!')
+  //       .targetEvent(event)
+  //   );
+  // };
+
+  $scope.resetFinishedDestinations = function(){
+    $rootScope.finishedDestinations = [];
   };
-
-
-// Funcs when user chooses SD from a list.
-  $scope.chooseSd = function(sd){
-    $rootScope.finishedDstinations = [];
-    $rootScope.remainingDstinations = [];
+  $scope.setFinishedDestinations = function(sd){
+    $rootScope.finishedDestinations = [];
     sd.finished.forEach(function(axis){
       var item = {
             id: axis.id, 
             name: axis.name, 
             position:[axis.x, axis.y]
           };
-      $rootScope.finishedDstinations.push(item);
+      $rootScope.finishedDestinations.push(item);
     });
+  };
+
+  $scope.resetRemainingDestinations = function(){
+    $rootScope.remainingDestinations = [];
+  };
+  $scope.setRemainingDestinations = function(sd){
+    $rootScope.remainingDestinations = [];
     sd.remaining.forEach(function(axis){
       var item = {
             id: axis.id, 
             name: axis.name, 
             position:[axis.x, axis.y]
           };
-      $rootScope.remainingDstinations.push(item);
+      $rootScope.remainingDestinations.push(item);
     });
-    $rootScope.defaultZoom = sd.defaultZoom;
-    $rootScope.centerAxis = sd.centerAxis;
-
-    console.log("remaining");
-    console.log($rootScope.finishedDstinations);
-    console.log("finished");
-    console.log($rootScope.remainingDstinations);
-
-    $rootScope.sd = sd;
-    $rootScope.firstToSecond();
   };
 
-  $rootScope.showFinished = function(val){
-    if(val){
-      var finishedList = $rootScope.sd.finished.slice();
-      console.log("list********:");
-      console.log(finishedList);
-      $rootScope.origin = finishedList[0];
-      $rootScope.destination = finishedList[finishedList.length-1];
-      finishedList.pop();
-      finishedList.shift();
-      console.log("list********:");
-      console.log(finishedList);
+  $scope.showRoute = function(destinationList){
+      var destinationList_wk = destinationList.slice();
+      var originDirection = destinationList_wk.shift();
+      var originAxis = [originDirection.x, originDirection.y];
+      var finalDestDirection = destinationList_wk.pop();
+      var finalDestAxis = [finalDestDirection.x, finalDestDirection.y];
+
+      $rootScope.origin = originAxis.join(',');
+      $rootScope.destination = finalDestAxis.join(',');
 
       $rootScope.wayPoints = [];
-      finishedList.forEach(function(axis){
-        console.log(axis.x + " " + axis.x + " (types: " + (typeof axis.x) + ", " + (typeof axis.x) + ")");
-        var myLatlng = new google.maps.LatLng(axis.x,axis.y);
-        var tmp = {location: myLatlng, stopover: true};
+      destinationList_wk.forEach(function(axis){
+        var tmp = {location: {lat:axis.x, lng:axis.y}, stopover: true};
         $rootScope.wayPoints.push(tmp);
       });
-      
-    }else{
-      $rootScope.origin = null;
-      $rootScope.destination = null;
-      $rootScope.wayPoints = null;
-    }
+  };
+  $scope.hideRoute = function(){
+    $rootScope.origin = null;
+    $rootScope.destination = null;
+    $rootScope.wayPoints = [];
+    console.log($rootScope.origin);
+    console.log($rootScope.destination);
   };
 
-  $rootScope.showRemaining = function(val){
-    console.log(val);
+  // Funcs when user chooses SD from a list.
+  $scope.chooseSd = function(sd){
+    // Set destinations for marker.
+    // $scope.setFinishedDestinations(sd);
+    // $scope.setRemainingDestinations(sd);
+    // Set params for gmap.
+    $rootScope.defaultZoom = sd.defaultZoom;
+    $rootScope.centerAxis = sd.centerAxis;
+    // SInitialize the page.
+    $rootScope.sd = sd;
+    $rootScope.firstToSecond(); 
   };
+
+  $rootScope.showFinished = function(){
+      $scope.setFinishedDestinations($rootScope.sd);
+  };
+  $rootScope.hideFinished = function(){
+      $scope.resetFinishedDestinations();
+  };
+
+  $rootScope.showRemaining = function(){
+    $scope.setRemainingDestinations($rootScope.sd);
+    $scope.showRoute($rootScope.sd.remaining);
+  };
+  $rootScope.hideRemaining = function(){
+      $scope.hideRoute();
+      $scope.resetRemainingDestinations();
+  };
+
+
+  $rootScope.finishedClicked = function(val){
+    console.log(val);
+    if(val){
+      $rootScope.showFinished();
+    }else{
+      $rootScope.hideFinished();
+    }
+  }
+
+  $rootScope.remainingClicked = function(val){
+    console.log(val);
+    if(val){
+      $rootScope.showRemaining();
+    }else{
+      $rootScope.hideRemaining();
+    }
+  }
 
 });
