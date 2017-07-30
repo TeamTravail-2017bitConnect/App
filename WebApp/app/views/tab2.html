@@ -1,25 +1,50 @@
 <md-list ng-controller="ListCtrl" ng-cloak>
 
 
-	<md-subheader class="md-no-sticky">
+	<md-subheader class="md-no-sticky well">
 
 
       <div class="row">
         <div class="col-sm-3">
-           <img src="images/yeoman.png" class="img-circle" height="55" width="55" alt="I'm Yeoman">
+           <img src="images/profile_sd.png" class="img-circle" height="55" width="55" alt="I'm Yeoman">
           </div>
-        <div class="col-sm-9 text-center">
-           <p style="margin-bottom:0px;">{{name}}</p>
-          </div>
+        <div class="col-sm-9">
+            <div>
+              <p style="margin-bottom:0px;">{{sd.name}} (従業員ID：0000{{sd.id}})</p>
+            </div>
+            <div class="well row" style=" background: #FFFF99; padding: 0px;">
+              <div class="col-sm-9 pull-left">
+                 <h4>累積残業時間：</h4>
+                 <h4>予想完了時間：</h4>
+                 <h4>予想残業時間：</h4>
+              </div>
+              <div class="col-sm-3 pull-right">
+                 <h4>30h</h4>
+                 <h4>30h</h4>
+                 <h4 style="color: red; ">5h</h4>
+              </div>              
+            </div>
+        </div>
       </div>
 
 	</md-subheader>
 
+    <div class="well" style="padding-bottom: 10px; padding-top: 10px;">
+      <p>地図上の凡例</p>
+      <div class="row" style="padding-bottom: 10px;">
+        <img src="images/red_icon_s.png" style="width:25px;"/>：配達予定先 
+        <img src="images/blue_icon_s.png" style="width:25px;"/>：配達済み 
+      </div>
+      <div class="row">
+        <img src="images/yamatoLogo.jpg" style="width:25px;"/>：センター　
+        <img src="images/truck_pin_s.png" style="width:25px;"/>：トラック現在地
+      </div>
+    </div>
 		<p>ルートの消化率</p>
 		<div class="progress">
-		  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50"
+		  <div class="progress-bar progress-bar-{{sd.level}}" role="progressbar" aria-valuenow="50"
 		  aria-valuemin="0" aria-valuemax="100" style="width:{{progressRate}}%">
-		    {{progressRate}}% Complete (info)
+		    {{progressRate}}% 完了
 		  </div>
 		</div>
 
@@ -27,35 +52,85 @@
 		<div class="progress">
 		  <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="50"
 		  aria-valuemin="0" aria-valuemax="100" style="width:{{doneRate}}%">
-		    {{doneRate}}% Complete (info)
+		    {{doneRate}}% 完了
 		  </div>
 		</div>
 
 
-	<div>
+	<div class="well">
 		<canvas id="doughnut" class="chart chart-doughnut"
 		  chart-data="data" chart-labels="labels" chart-options="options" chart-click="onClick">
 		</canvas> 
 	</div>
 
 
-   	<div class="col-sm-5 sidenav">
 
-  <div class="funkyradio">
+<!--   <div class="funkyradio">
   	<div class="funkyradio-default">
-<!-- 	    <label class="checkbox">
+	    <label class="checkbox">
     	<input type="checkbox" data-toggle="checkbox" value="">配達済み</label>
     </div>
     <label class="checkbox">
       <input type="checkbox" data-toggle="checkbox" value="">
       未配達
-    </label> -->
+    </label>
     <label class="checkbox">
       <input type="checkbox" data-toggle="checkbox" value="" ng-model="checkboxModel.route" ng-click="routeClicked(checkboxModel.route)">
       想定ルート
     </label>
-  </div>
+  </div> -->
 
+
+  <div flex-gt-sm="100" flex>
+
+    <md-toolbar layout="row">
+      <div class="md-toolbar-tools">
+        <span>担当顧客リスト</span>
+        <label class="checkbox">
+      <input type="checkbox" data-toggle="checkbox" value="" ng-model="checkboxModel.route" ng-click="routeClicked(checkboxModel.route)">
+      想定ルート
+    </label>
+      </div>
+    </md-toolbar>
+
+    <md-content>
+      <md-list flex>
+        <md-subheader class="md-no-sticky">これから配達予定の顧客</md-subheader>
+        <md-list-item class="md-3-line" ng-repeat="item in remainingDestinations" ng-click="null">
+          <img ng-src="images/profile.jpeg" class="md-avatar" alt="{{item.name}}" />
+
+          <div class="col-sm-9">
+            <div class="md-list-item-text" layout="column">
+              <h3>顧客ID：0000{{ item.id }}</h3>
+              <h4>顧客名：{{ item.name }}</h4>
+              <p>住所：{{ item.address }}</p>
+            </div>
+          </div>
+          <div class="col-sm-5 well">
+            <h4>到着予想 10:30</h4>
+          </div>
+        </md-list-item>
+        <md-list-item class="md-3-line" ng-click="null">
+          <img ng-src="images/yamatoLogo.jpg" class="md-avatar" alt="{{center.name}}" />
+          <div class="md-list-item-text" layout="column">
+            <h3>センターID：0000{{ center.id }}</h3>
+            <h4>センター名：{{ center.name }}</h4>
+            <p>住所：{{ center.address }}</p>
+          </div>
+        </md-list-item>
+        <md-divider ></md-divider>
+        <md-subheader class="md-no-sticky">配達完了済みの顧客</md-subheader>
+        <md-list-item class="md-3-line" ng-repeat="item in finishedDestinations" ng-click="null">
+          <img ng-src="images/profile.jpeg" class="md-avatar" alt="{{item.name}}" />
+          <div class="md-list-item-text" layout="column">
+            <h3>顧客ID：0000{{ item.id }}</h3>
+            <h4>顧客名：{{ item.name }}</h4>
+            <p>住所：{{ item.address }}</p>
+          </div>
+        </md-list-item>
+        <md-divider ></md-divider>
+
+        </div>
 
 
 <!--    	<div class="col-sm-5 sidenav">

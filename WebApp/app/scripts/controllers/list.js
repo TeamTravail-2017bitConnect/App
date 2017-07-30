@@ -4,24 +4,70 @@
 angular.module('webAppApp')
   .controller('ListCtrl', function($rootScope, $scope, $http, $mdDialog) {
 
+    $rootScope.center = {"id": 1, "name": "若林センター", "address": "東京都世田谷区代田３－２－１８"};
+
+   
+    console.log($rootScope.center);
+
+
     var imagePath = 'images/yeoman.png';
-    $rootScope.center = {
-      "name": "東京メインセンター１",
-      "x": "35.615514",
-      "y": "139.632126 "
-    };
+    // $rootScope.center = DelCenter;
 
     $scope.sds = [
         {
-          "name": "Yamada", 
-          "pic": imagePath, 
+          "name": "山田　武", 
+          "pic": imagePath,
+          "level": "info",
           "id": "1", 
-          "progress": 50, 
+          "progressRate": 0.66, 
         },
-        {"name": "Tanaka",
+        {"name": "柏原　進",
           "pic": imagePath,  
+          "level": "danger",
           "id": "2",
-          "progress": 20, 
+          "progressRate": 0.2, 
+        },
+        {"name": "田中　謙治",
+          "pic": imagePath,  
+          "level": "danger",
+          "id": "3",
+          "progressRate": 0.3, 
+        },
+        {"name": "井上　聡史",
+          "pic": imagePath,  
+          "level": "success",
+          "id": "4",
+          "progressRate": 0.7, 
+        },
+        {"name": "佐藤　淳",
+          "pic": imagePath,  
+          "level": "success",
+          "id": "5",
+          "progressRate": 0.9, 
+        },
+        {"name": "配達員A",
+          "pic": imagePath,
+          "level": "success",
+          "id": "6",
+          "progressRate": 0.8, 
+        },
+        {"name": "配達員B",
+          "pic": imagePath, 
+          "level": "warning",
+          "id": "7",
+          "progressRate": 0.5, 
+        },
+        {"name": "配達員C",
+          "pic": imagePath,  
+          "level": "info",
+          "id": "8",
+          "progressRate": 0.55, 
+        },
+        {"name": "配達員D",
+          "pic": imagePath, 
+          "level": "danger", 
+          "id": "9",
+          "progressRate": 0.22, 
         }
     ];
 
@@ -51,6 +97,21 @@ angular.module('webAppApp')
     });
   };
 
+  $rootScope.resetRedeliveringDestinations = function(){
+    $rootScope.redeliveringDestinations = [];
+  };
+  $rootScope.setRedeliveringDestinations = function(destinationList){
+    $rootScope.redeliveringDestinations = [];
+    destinationList.forEach(function(destination){
+      var item = {
+            id: destination.baggageId, 
+            name: destination.customerName, 
+            position: destination.x + "," + destination.y
+          };
+      $rootScope.redeliveringDestinations.push(item);
+    });
+  };
+
   $rootScope.resetRemainingDestinations = function(){
     $rootScope.remainingDestinations = [];
   };
@@ -73,7 +134,7 @@ angular.module('webAppApp')
       $rootScope.origin = originDirection.position;
       // var finalDestDirection = destinationList_wk.pop();
       // var finalDestDirection = destinationList_wk.pop();
-      $rootScope.destination = $rootScope.center.x + "," + $rootScope.center.y;
+      $rootScope.destination = $rootScope.center.address;
 
       console.log($rootScope.origin);
       console.log($rootScope.destination);
@@ -84,6 +145,7 @@ angular.module('webAppApp')
         var tmp = {location: point.x + "," + point.y, stopover: true};
         $rootScope.wayPoints.push(tmp);
       });
+      $rootScope.finishedDestinations = [];
       console.log($rootScope.wayPoints);
   };
   $rootScope.hideRoute = function(){
@@ -117,9 +179,10 @@ $rootScope.updateTruckPos = function(sd, callback){
 
       $rootScope.rawRemainingDestinations = response.data.baggages.delivering;
       $rootScope.rawFinishedDestinations = response.data.baggages.done;
+      $rootScope.rawRedeliveringDestinations = response.data.baggages.redelivery;
 
       $rootScope.name = response.data.name;
-      $rootScope.progressRate = response.data.progressRate *100;
+      $rootScope.progressRate = (response.data.progressRate *100).toFixed(1);
 
       callback();
 
@@ -136,17 +199,19 @@ $rootScope.updateTruckPos = function(sd, callback){
   $rootScope.chooseSd = function(sd){
 
     $rootScope.updateTruckPos(sd,   function(){
-      $rootScope.defaultZoom = sd.defaultZoom;
-      $rootScope.centerAxis = sd.centerAxis;
+      // $rootScope.defaultZoom = sd.defaultZoom;
+      // $rootScope.centerAxis = sd.centerAxis;
+      $rootScope.defaultZoom = 15;
+      $rootScope.centerAxis = "〒155-0032 東京都世田谷区代沢５丁目１４";
 
       var remainingSize = $rootScope.rawRemainingDestinations.length;
       var finishedSize = $rootScope.rawFinishedDestinations.length;
-      var redeliveringSize = 5;
-      $rootScope.doneRate = (finishedSize / (finishedSize + remainingSize)) * 100;
+      var redeliveringSize = $rootScope.rawRedeliveringDestinations.length;
+      $rootScope.doneRate = ((finishedSize / (finishedSize + remainingSize)) * 100).toFixed(1);
 
 
-      $rootScope.labels = ["配達済み", "未配達", "再配達"];
-      $rootScope.data = [remainingSize, finishedSize, redeliveringSize];
+      $rootScope.labels = ["再配達", "未配達", "配達済み"];
+      $rootScope.data = [redeliveringSize, remainingSize, finishedSize];
       $rootScope.options = {legend: {display: true, position: 'right'}};
 
       // SInitialize the page.
@@ -155,6 +220,7 @@ $rootScope.updateTruckPos = function(sd, callback){
 
       $rootScope.remainingClicked(true);
       $rootScope.finishedClicked(true);
+      $rootScope.redeliveringClicked(true);
 
     });
   };
@@ -164,6 +230,13 @@ $rootScope.updateTruckPos = function(sd, callback){
   };
   $rootScope.hideFinished = function(){
       $rootScope.resetFinishedDestinations();
+  };
+
+  $rootScope.showRedelivering = function(){
+      $rootScope.setRedeliveringDestinations($rootScope.rawRedeliveringDestinations);
+  };
+  $rootScope.hideRedelivering = function(){
+      $rootScope.resetRedeliveringDestinations();
   };
 
   $rootScope.showRemaining = function(){
@@ -182,6 +255,14 @@ $rootScope.updateTruckPos = function(sd, callback){
     }
   }
 
+  $rootScope.redeliveringClicked = function(val){
+    if(val){
+      $rootScope.showRedelivering();
+    }else{
+      $rootScope.hideRedelivering();
+    }
+  }
+
   $rootScope.remainingClicked = function(val){
     if(val){
       $rootScope.showRemaining();
@@ -193,6 +274,7 @@ $rootScope.updateTruckPos = function(sd, callback){
   $rootScope.routeClicked = function(val){
     if(val){
       $rootScope.showRoute($rootScope.rawRemainingDestinations);
+      $rootScope.SecondToThird();
     }else{
       $rootScope.hideRoute();
     }

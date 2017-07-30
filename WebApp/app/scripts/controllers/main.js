@@ -52,6 +52,9 @@ angular.module('webAppApp')
     bottom:        false
   };
   $rootScope.firstToSecond = function() {
+    $rootScope.dataForSlideNavbar.selectedIndex = 1 ;
+  };
+  $rootScope.SecondToThird = function() {
     $rootScope.dataForSlideNavbar.selectedIndex = 2 ;
   };
   this.next = function() {

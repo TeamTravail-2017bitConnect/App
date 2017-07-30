@@ -14,12 +14,18 @@
             <ng-include src="'views/tab1.html'"></ng-include>
           </md-tab-body>
         </md-tab>
-        <md-tab id="tab2" md-on-deselect="resetMarkers()">
+        <md-tab id="tab2">
           <md-tab-label>配送状況詳細</md-tab-label>
           <md-tab-body>
             <ng-include src="'views/tab2.html'"></ng-include>
           </md-tab-body>
         </md-tab>
+        <md-tab id="tab3" md-on-deselect="resetMarkers()">
+          <md-tab-label>予想配達経路</md-tab-label>
+          <md-tab-body>
+            <div id="directions-panel"></div>
+          </md-tab-body>
+        </md-tab>        
       </md-tabs>
     </md-content>
   </div>

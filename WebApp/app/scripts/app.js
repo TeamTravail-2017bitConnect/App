@@ -19,6 +19,13 @@ angular
     'ngMap',
     'chart.js'
   ])
+  .value(
+    'DelCenter', {
+      'id': '',
+      'name': '',
+      'address': ''
+    }
+  )
   .config(function ($routeProvider, $locationProvider, $mdIconProvider) {
     $mdIconProvider
           .iconSet('communication', 'img/icons/sets/communication-icons.svg')
@@ -26,6 +33,11 @@ angular
     $locationProvider.html5Mode(false).hashPrefix('');
     $routeProvider
       .when('/', {
+        templateUrl: 'views/centersMap.html',
+        controller: 'CentersMapCtrl',
+        controllerAs: 'centersMap'
+      })
+      .when('/main', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl',
         controllerAs: 'main'

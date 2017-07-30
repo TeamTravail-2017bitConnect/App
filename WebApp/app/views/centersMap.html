@@ -1,0 +1,32 @@
+<ng-map 
+    zoom=13
+    center="35.658019, 139.661321" 
+    map-type-id="TERRAIN" 
+    style="width: 100%; height: 100%;">
+
+
+    <marker id='{{d.id}}' position="{{d.address}}"
+      ng-repeat="d in centerList"
+      on-click="showCenterDetail(d)"
+      style="background-color: {{d.color}};"
+      icon="{
+            url:'images/yamatoLogo.jpg',
+            scaledSize:[40,30],
+            origin: [0,0],
+            anchor: [0,0]
+          }"></marker>
+
+	<info-window id="foo-iw">
+		<div ng-non-bindable="">
+		  ID: {{center.id}}<br/>
+		  名称: {{center.name}}<br/>
+		  住所: {{center.address}}<br/>
+<!-- 		  Position 2: {{anchor.getPosition()}}<br/>
+		  Position 3: {{vm.map.markers[vm.shop.id].getPosition()}}<br/> -->
+		  <a href="#/main" ng-click="chooseCenter(center)">このセンターを選択</a>
+		</div>
+	</info-window>
+
+
+
+</ng-map>
