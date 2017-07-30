@@ -70,6 +70,12 @@
           icon="images/red_icon_s.png"></marker>
 
         <marker id='{{d.id}}' position="{{d.position}}"
+          ng-repeat="d in redeliveringDestinations"
+          on-click="showDetail(d)"
+          icon="images/green_icon_s.png"></marker>
+
+
+        <marker id='{{d.id}}' position="{{d.position}}"
           ng-repeat="d in truckPos"
           animation="Animation.BOUNCE"
           icon="images/truck_pin_s.png"></marker>

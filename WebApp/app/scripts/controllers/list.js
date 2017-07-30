@@ -77,6 +77,7 @@ angular.module('webAppApp')
     if(index == 0){
       console.log("Show Remainig");
       $rootScope.remainingClicked(false);
+      $rootScope.redeliveringClicked(false);
       console.log($rootScope.remainingDestinations);
     };
   };
@@ -91,6 +92,7 @@ angular.module('webAppApp')
       var item = {
             id: destination.baggageId, 
             name: destination.customerName, 
+            address: destination.address,
             position: destination.x + "," + destination.y
           };
       $rootScope.finishedDestinations.push(item);
@@ -106,6 +108,7 @@ angular.module('webAppApp')
       var item = {
             id: destination.baggageId, 
             name: destination.customerName, 
+            address: destination.address,
             position: destination.x + "," + destination.y
           };
       $rootScope.redeliveringDestinations.push(item);
@@ -118,9 +121,16 @@ angular.module('webAppApp')
   $rootScope.setRemainingDestinations = function(destinationList){
     $rootScope.remainingDestinations = [];
     destinationList.forEach(function(destination){
+      // var item = {
+      //       id: destination.baggageId, 
+      //       name: destination.customerName, 
+      //       address: destination.address,
+      //       position: destination.x + "," + destination.y
+      //     };
       var item = {
             id: destination.baggageId, 
             name: destination.customerName, 
+            address: destination.address,
             position: destination.x + "," + destination.y
           };
       $rootScope.remainingDestinations.push(item);
@@ -128,8 +138,34 @@ angular.module('webAppApp')
     console.log($rootScope.remainingDestinations);
   };
 
+
+  $rootScope.loadOptRoute = function(callback){
+    $http({
+      method: 'GET',
+      url: "http://52.68.160.220/api/route?track_id=3",
+      header: {
+        'Access-Control-Allow-Origin':'*',
+        'Access-Control-Allow-Methods':'POST, GET, OPTIONS',
+        'Access-Control-Allow-Headers':'*'
+      }
+    }).then(function successCallback(response) {
+
+      console.log("response:");
+      console.log(response.data);
+      callback(response.data);
+
+    }, function errorCallback(response) {
+      console.log(response);
+      callback(null);
+    });
+  }
+
+
+
   $rootScope.showRoute = function(destinationList){
-      var destinationList_wk = destinationList.slice();
+
+    $rootScope.loadOptRoute(function(data){
+      var destinationList_wk = data.slice();
       var originDirection = $rootScope.truckPos[0]
       $rootScope.origin = originDirection.position;
       // var finalDestDirection = destinationList_wk.pop();
@@ -146,7 +182,11 @@ angular.module('webAppApp')
         $rootScope.wayPoints.push(tmp);
       });
       $rootScope.finishedDestinations = [];
+      $rootScope.redeliveringDestinations = [];
       console.log($rootScope.wayPoints);
+
+    });
+
   };
   $rootScope.hideRoute = function(){
     $rootScope.origin = undefined;
@@ -193,11 +233,21 @@ $rootScope.updateTruckPos = function(sd, callback){
   // }, 1000);
 };
 
+  $rootScope.onFl = function(){
+    console.log("fl on");
+    $rootScope.fl = true;
+  };
+
+  $rootScope.offFl = function(){
+    console.log("fl off");
+    $rootScope.fl = false;
+  };
 
 
   // Funcs when user chooses SD from a list.
   $rootScope.chooseSd = function(sd){
 
+    console.log("chooseSd() is run!!!");
     $rootScope.updateTruckPos(sd,   function(){
       // $rootScope.defaultZoom = sd.defaultZoom;
       // $rootScope.centerAxis = sd.centerAxis;
@@ -210,9 +260,10 @@ $rootScope.updateTruckPos = function(sd, callback){
       $rootScope.doneRate = ((finishedSize / (finishedSize + remainingSize)) * 100).toFixed(1);
 
 
-      $rootScope.labels = ["再配達", "未配達", "配達済み"];
-      $rootScope.data = [redeliveringSize, remainingSize, finishedSize];
+      $rootScope.labels = [ "配達済み", "配達予定", "再配達"];
+      $rootScope.data = [finishedSize, remainingSize, redeliveringSize];
       $rootScope.options = {legend: {display: true, position: 'right'}};
+      $rootScope.colors = ['#1E90FF', '#FF0000', '#32CD32'];
 
       // SInitialize the page.
       $rootScope.sd = sd;
@@ -223,6 +274,16 @@ $rootScope.updateTruckPos = function(sd, callback){
       $rootScope.redeliveringClicked(true);
 
     });
+
+      setTimeout(function(){
+        if($rootScope.fl){
+          $rootScope.chooseSd(sd);
+        }else{
+          console.log("Keep checking...");
+        };
+      }, 3000);
+
+
   };
 
   $rootScope.showFinished = function(){
@@ -240,7 +301,10 @@ $rootScope.updateTruckPos = function(sd, callback){
   };
 
   $rootScope.showRemaining = function(){
-    $rootScope.setRemainingDestinations($rootScope.rawRemainingDestinations);
+    // $rootScope.loadOptRoute(function(data){
+      $rootScope.setRemainingDestinations($rootScope.rawRemainingDestinations);
+      // $rootScope.setRemainingDestinations(data);
+    // });
   };
   $rootScope.hideRemaining = function(){
       $scope.resetRemainingDestinations();
@@ -273,6 +337,7 @@ $rootScope.updateTruckPos = function(sd, callback){
 
   $rootScope.routeClicked = function(val){
     if(val){
+      $rootScope.fl = false;
       $rootScope.showRoute($rootScope.rawRemainingDestinations);
       $rootScope.SecondToThird();
     }else{

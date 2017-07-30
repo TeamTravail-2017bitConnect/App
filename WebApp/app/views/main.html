@@ -8,13 +8,13 @@
       <md-tabs class="md-accent" md-selected="dataForSlideNavbar.selectedIndex" 
         md-align-tabs="{{data.bottom ? 'bottom' : 'top'}}" 
         style="height: 100%; width: 100%; ">
-        <md-tab id="tab1">
+        <md-tab id="tab1" md-on-deselect="onFl()">
           <md-tab-label>SDリスト</md-tab-label>
           <md-tab-body>
             <ng-include src="'views/tab1.html'"></ng-include>
           </md-tab-body>
         </md-tab>
-        <md-tab id="tab2">
+        <md-tab id="tab2" md-on-select="onFl()" md-on-deselect="offFl()">
           <md-tab-label>配送状況詳細</md-tab-label>
           <md-tab-body>
             <ng-include src="'views/tab2.html'"></ng-include>
